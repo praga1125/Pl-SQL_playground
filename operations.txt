@@ -1,0 +1,227 @@
+scope:
+
+DECLARE
+num1 number := 10;
+num2 number := 20;
+BEGIN
+ dbms_output.put_line(num1);
+ dbms_output.put_line(num2);
+ DECLARE
+ num1 number := 100;
+ num2 number := 200;
+ BEGIN
+ dbms_output.put_line(num1);
+ dbms_output.put_line(num2);
+ END;
+END;
+/
+
+DECLARE
+ch1 varchar2(20) := &ch1;
+ch2 varchar2(20) := &ch2;
+BEGIN
+ dbms_output.put_line('global scope');
+ dbms_output.put_line(ch1 || 'is the first word' || ch2 ||'is the second word');
+ DECLARE
+  ch1 varchar2(20) := &ch1;
+  ch2 varchar2(20) := &ch2;
+ BEGIN
+  dbms_output.put_line('local scope');
+  dbms_output.put_line(ch1 || 'is the first word' || ch2 ||'is the second word');
+ END;
+END;
+/
+ 
+-------------------------------
+
+sub types:
+
+DECLARE
+SUBTYPE message IS varchar2(40);
+SUBTYPE hello IS integer(2,0);
+
+desca hello;
+description message;
+
+BEGIN 
+description:=&message;
+desca := 22;
+dbms_output.put_line('This is ' || description || ' with age ' || desca);
+END;
+/
+----------------------------------
+
+greatest three:
+
+DECLARE
+num1 number := &num1;
+num2 number := &num2;
+num3 number := &num3;
+BEGIN
+if(num1 > num2) then
+ if(num1 > num3) then
+   dbms_output.put_line( num1 ||' is the greatest number');
+ else 
+   dbms_output.put_line( num3 ||' is the greatest number');
+ end if;
+else 
+   if(num2 > num3) then
+    dbms_output.put_line( num2 ||' is the greatest number');
+   else 
+    dbms_output.put_line( num3 ||' is the greatest number');
+  end if;
+end if;
+END;
+/
+----------------------------------------------------------
+swap two with third var and not third var:
+
+DECLARE
+num1 number := &num1;
+num2 number := &num2;
+temp number;
+BEGIN
+dbms_output.put_line('before swaping');
+dbms_output.put_line('number 1 is :' || num1);
+dbms_output.put_line('number 2 is :' || num2);
+temp := num1;
+num1 := num2;
+num2 := temp;
+dbms_output.put_line('after swaping');
+dbms_output.put_line('number 1 is :' || num1);
+dbms_output.put_line('number 2 is :' || num2);
+END;
+/
+
+-----------------------------------------
+
+DECLARE
+num1 number := &num1;
+num2 number := &num2;
+BEGIN
+dbms_output.put_line('before swaping');
+dbms_output.put_line('number 1 is :' || num1);
+dbms_output.put_line('number 2 is :' || num2);
+num1 := num1+num2;
+num2 := num1-num2;
+num1 := num1-num2;
+dbms_output.put_line('after swaping');
+dbms_output.put_line('number 1 is :' || num1);
+dbms_output.put_line('number 2 is :' || num2);
+END;
+/
+
+------------------------------------------
+
+NORMAL LOOPS
+
+DECLARE
+i number := 1;
+BEGIN
+LOOP
+EXIT WHEN i > 10;
+dbms_output.put_line(i);
+i := i+1;
+end loop;
+END;
+/
+------------------------------------------------
+ loops
+DECLARE 
+i number := 1;
+count1 number := 0;
+input number := &input;
+BEGIN
+for counter in 1..20
+loop
+if(counter = input) then
+count1 := 1;
+end if;
+end loop;
+if(count1 = 1) then
+dbms_output.put_line('the number: '|| input ||' is present in the table');
+else 
+dbms_output.put_line('the number: '|| input ||' is not present in the table');
+end if;
+END;
+/
+
+
+-----------------------------------------
+reverse 
+
+BEGIN
+for counter in reverse 1..20
+loop
+dbms_output.put_line(counter);
+end loop;
+END;
+/
+
+-----------------------------------------------------
+
+prime 
+
+DECLARE
+num number := &num;
+remain number := 0;
+checker number := 0;
+BEGIN
+for counter in 2..20
+LOOP
+remain := MOD(num, counter);
+if(remain = 0) then
+checker := 1;
+end if;
+end loop;
+if(checker = 1) then 
+dbms_output.put_line('this number is prime number : '|| num);
+else 
+dbms_output.put_line('this number is not a prime number : '|| num);
+end if;
+END;
+/
+
+--------------------------------------------------- 
+
+factorial
+
+DECLARE
+fact number :=1;
+n number :=&1;
+BEGIN
+WHILE n>0  LOOP
+fact:=n*fact;
+n:=n-1;
+END loop;
+dbms_output.put_line(fact);
+END;
+/
+----------------------------------------------------
+
+fabinocci
+
+DECLARE
+first number := 0;
+second number := 1;
+temp number;
+n number := 5;
+i number;
+BEGIN
+dbms_output.put_line('Series:');
+dbms_output.put_line(first);
+dbms_output.put_line(second);
+for i in 2..n
+LOOP
+temp:=first+second;
+first := second;
+second := temp;
+dbms_output.put_line(temp);
+ENDloop;
+END;
+/
+
+
+-----------------------------------------------------
+
+
