@@ -1,0 +1,203 @@
+cursor
+
+DECLARE
+a employees.salary%type;
+BEGIN
+select salary into a from  employees where emp_id = 103;
+if sql% found then
+insert into t1(a) values(a);
+dbms_output.put_line(sql%rowcount);
+end if;
+
+update t1 set a=10000 where a=40000;
+--delete from t1;
+if sql%found then 
+dbms_output.put_line(sql%rowcount);
+
+elsif sql%notfound then
+dbms_output.put_line('no rows found');
+end if;
+end;
+/
+---------------------------------------------
+
+procedure 1
+
+DECLARE 
+a number;
+b number;
+c number;
+
+PROCEDURE findMin(x IN number, y In number, z OUT number) IS
+BEGIN 
+if(x > y) then 
+z := x;
+else 
+z := y;
+end if;
+END;
+
+BEGIN
+
+a := 10;
+b := 20;
+
+findMin(a, b, c);
+
+dbms_output.put_line('the minimum of number is ' || c);
+END;
+/
+--------------------------------
+
+procedure 2
+
+DECLARE 
+a number;
+
+PROCEDURE squareNum(x IN OUT number) IS
+BEGIN 
+x := x*x;
+END;
+
+BEGIN
+
+a := 10;
+
+squareNum(a);
+
+dbms_output.put_line('the minimum of number is ' || a);
+END;
+/
+------------------------------------------------
+
+procedure 3
+
+DECLARE 
+first_name employees.first_name%type;
+sur_name employees.sur_name%type;
+hire_date employees.hire_date%type;
+empId employees.emp_id%type;
+
+PROCEDURE getDetails(empId IN employees.emp_id%type, firstName OUT employees.first_name%type, surName OUT employees.sur_name%type, hireDate OUT employees.hire_date%type) IS
+BEGIN 
+select first_name, sur_name, hire_date into firstName,surName,hireDate from employees where emp_id = empId;
+END;
+
+BEGIN
+
+empId := &empId;
+
+getDetails(empId, first_name, sur_name, hire_date);
+
+dbms_output.put_line('emp name is '|| first_name || ' ' ||sur_name);
+dbms_output.put_line('emp name joined date is '||hire_date);
+END;
+/
+
+---------------------------------------------------------------
+function 1
+
+CREATE OR REPLACE FUNCTION tsfun(a in number)return number as
+b number;
+BEGIN
+select salary*5/100 into b from departments where dept_id = a;
+return b;
+END;
+/ 
+
+DECLARE
+c number;
+BEGIN
+c := tsfun(&c);
+dbms_output.put_line('the salary of the department is : ' || c);
+END;
+/
+---------------------------------------------------------------
+function 2
+
+CREATE OR REPLACE FUNCTION tst2(a in number, b out date)return date as
+BEGIN
+select hire_date into b from employees where emp_id = a;
+return b;
+END;
+/ 
+
+DECLARE
+b date;
+BEGIN
+b := tst2(101, b);
+dbms_output.put_line('The hire date is ' || b);
+END;
+/
+
+----------------------------------------------------------------------
+function 3 
+
+DECLARE
+sal number;
+fName employees.first_name%type;
+
+CREATE OR REPLACE FUNCTION findSal(sal in number)
+return employees.first_name%type as
+name employees.first_name%type
+BEGIN
+select first_name into name from employees where salary = sal;
+return name;
+END;
+/ 
+
+BEGIN
+fName := findSal(&sal);
+dbms_output.put_line('The salary getting person name is : ' || fName);
+END;
+/
+
+------------------------------------------------------
+procedure 4
+
+DECLARE 
+sal employees.salary%type;
+
+PROCEDURE getDetails(sal IN employees.salary%type) IS
+BEGIN
+update employees set salary = salary*5 WHERE salary < sal;
+END;
+
+BEGIN
+sal := &sal;
+getDetails(sal);
+dbms_output.put_line(sal);
+END;
+/
+-----------------------------------------------------
+function 4
+
+declare 
+cursor c_emp is select * from employees;
+a c_emp%rowtype;
+x number;
+rows number;
+ 
+function updatsal(sal in number) return number as
+begin
+open c_emp;
+select count(*) into rows from employees;
+for i in 1..rows loop
+fetch c_emp into a;
+if a.salary < sal then
+    a.salary := 5*(a.salary);
+    dbms_output.put_line(a.first_name||' '||a.salary);
+end if;
+end loop;
+close c_emp;
+return 1;
+end;
+ 
+begin
+x := updatsal(3500);
+end;
+/
+
+
+
+
